@@ -26,24 +26,24 @@ runs:
     - name: List
       shell: bash
       run: |
-        ls
-        echo "------"
-        pwd
-        echo "------"
-        ls actions-repo/stacks-core/create-source-binary/build-scripts
-        echo "------"
+        mkdir -p /usr/bin/test-dockerfile
+        touch /usr/bin/test-dockerfile/Dockerfile.${{ inputs.arch }}
         ls ~/work
         echo "------"
-        ls ~/work/stack-core
+        ls ~/work/stacks-core
         echo "------"
-        ls ~/work/stack-core/stack-core
+        ls ~/work/stacks-core/stacks-core
+        echo "------"
+        ls /usr/bin
+        echo "------"
+        cat ~/work/stacks-core/stacks-core/actions-repo/stacks-core/create-source-binary/build-scripts/Dockerfile.${{ inputs.arch }}
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
       id: build_binaries
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # 5.0.0
       with:
-        file: stacks-core/actions-repo/stacks-core/create-source-binary/build-scripts/Dockerfile.${{ inputs.arch }}
+        file: test-dockerfile/Dockerfile.${{ inputs.arch }}
         outputs: type=local,dest=./release/${{ inputs.arch }}
         build-args: |
           STACKS_NODE_VERSION=${{ inputs.tag || env.GITHUB_SHA_SHORT }}
