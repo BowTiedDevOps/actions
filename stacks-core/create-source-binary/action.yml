@@ -10,6 +10,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+    ## Git checkout the actions repository
+    - name: Checkout actions
+      id: checkout_actions
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        repository: BowTiedDevOps/actions
+        path: actions-repo
+        ref: feat/move-binary-build-to-composite
+
     ## Setup Docker for the builds
     - name: Docker setup
       uses: stacks-network/actions/docker@main
@@ -19,7 +28,7 @@ runs:
       id: build_binaries
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # 5.0.0
       with:
-        file: build-scripts/Dockerfile.${{ inputs.arch }}
+        file: actions-repo/stacks-core/create-source-binary/build-scripts/Dockerfile.${{ inputs.arch }}
         outputs: type=local,dest=./release/${{ inputs.arch }}
         build-args: |
           STACKS_NODE_VERSION=${{ inputs.tag || env.GITHUB_SHA_SHORT }}
