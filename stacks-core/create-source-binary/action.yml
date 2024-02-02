@@ -23,30 +23,23 @@ runs:
         path: actions-repo
         ref: feat/move-binary-build-to-composite
 
+    - name: List
+      shell: bash
+      run: |
+        pwd
+
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
       id: build_binaries
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # 5.0.0
       with:
-        file: ~/work/stacks-core/stacks-core/actions-repo/stacks-core/create-source-binary/build-scripts/Dockerfile.${{ inputs.arch }}
+        file: build-scripts/Dockerfile.${{ inputs.arch }}
         outputs: type=local,dest=./release/${{ inputs.arch }}
         build-args: |
           STACKS_NODE_VERSION=${{ inputs.tag || env.GITHUB_SHA_SHORT }}
           OS_ARCH=${{ inputs.arch }}
           GIT_BRANCH=${{ env.GITHUB_REF_SHORT }}
           GIT_COMMIT=${{ env.GITHUB_SHA_SHORT }}
-
-    - name: List
-      shell: bash
-      run: |
-        ls ~/work
-        echo "------"
-        ls ~/work/stacks-core
-        echo "------"
-        ls ~/work/stacks-core/stacks-core
-        echo "------"
-        sudo find / -type d -name '${{ inputs.arch }}' 
-      # /home/runner/work/stacks-core/stacks-core/release/linux-musl-armv7
 
     ## Compress the binary artifact
     - name: Compress artifact
