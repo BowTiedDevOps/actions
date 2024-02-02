@@ -22,7 +22,6 @@ runs:
         repository: BowTiedDevOps/actions
         path: actions-repo
         ref: feat/move-binary-build-to-composite
-    - name: Debug list
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
