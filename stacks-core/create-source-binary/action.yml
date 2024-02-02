@@ -30,6 +30,7 @@ runs:
     ## Compress the binary artifact
     - name: Compress artifact
       id: compress_artifact
+      shell: bash
       run: zip --junk-paths ${{ inputs.arch }} ./release/${{ inputs.arch }}/*
 
     ## Upload the binary artifact to the github action (used in `github-release.yml` to create a release)
