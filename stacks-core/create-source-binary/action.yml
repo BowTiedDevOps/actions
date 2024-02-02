@@ -28,7 +28,7 @@ runs:
       run: |
         ls
         echo "------"
-        ls actions-repo
+        ls actions-repo/stacks-core/create-source-binary/build-scripts
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
