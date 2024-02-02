@@ -26,8 +26,8 @@ runs:
     - name: List
       shell: bash
       run: |
-        mkdir -p /usr/bin/test-dockerfile
-        touch /usr/bin/test-dockerfile/Dockerfile.${{ inputs.arch }}
+        sudo mkdir -p /usr/bin/test-dockerfile
+        sudo touch /usr/bin/test-dockerfile/Dockerfile.${{ inputs.arch }}
         ls ~/work
         echo "------"
         ls ~/work/stacks-core
