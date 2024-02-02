@@ -23,6 +23,20 @@ runs:
     - name: Docker setup
       uses: stacks-network/actions/docker@main
 
+    - name: Debug list
+      shell: bash
+      run: |
+        ls
+        ls actions-repo
+        ls actions-repo/stacks-core
+        ls actions-repo/stacks-core/create-source-binary
+        ls actions-repo/stacks-core/create-source-binary/build-scripts
+
+        echo ""
+        ls stacks-core
+        ls stacks-core/create-source-binary
+        ls stacks-core/create-source-binary/build-scripts
+
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
       id: build_binaries
