@@ -23,6 +23,13 @@ runs:
         path: actions-repo
         ref: feat/move-binary-build-to-composite
 
+    - name: List
+      shell: bash
+      run: |
+        ls
+        echo "------"
+        ls actions-repo
+
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
       id: build_binaries
