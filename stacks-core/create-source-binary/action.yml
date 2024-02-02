@@ -15,13 +15,13 @@ runs:
       uses: stacks-network/actions/docker@main
 
     ## Git checkout the actions repository
-    - name: Checkout actions
-      id: checkout_actions
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      with:
-        repository: BowTiedDevOps/actions
-        path: actions-repo
-        ref: feat/move-binary-build-to-composite
+    # - name: Checkout actions
+    #   id: checkout_actions
+    #   uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+    #   with:
+    #     repository: BowTiedDevOps/actions
+    #     path: actions-repo
+    #     ref: feat/move-binary-build-to-composite
 
     - name: List
       shell: bash
