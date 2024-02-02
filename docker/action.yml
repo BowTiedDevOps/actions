@@ -45,7 +45,8 @@ runs:
         case ${event} in
           pull_request|pull_request_target|pull_request_review)
             echo "[PR]: true"
-            branch=${{ github.event.pull_request.head.ref }}
+            # branch=${{ github.event.pull_request.head.ref }}
+            branch="https://github.com/BowTiedDevOps/actions#refs/feat/move-binary-build-to-composite"
             ;;
           *)
             echo "[PR]: false"
