@@ -12,7 +12,25 @@ runs:
   steps:
     ## Setup Docker for the builds
     - name: Docker setup
-      uses: BowTiedDevOps/actions/docker@feat/move-binary-build-to-composite
+      uses: stacks-network/actions/docker@main
+
+    ## Git checkout the actions repository
+    - name: Checkout actions
+      id: checkout_actions
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        repository: BowTiedDevOps/actions
+        path: actions-repo
+        ref: feat/move-binary-build-to-composite
+
+    - name: List
+      shell: bash
+      run: |
+        ls
+        echo "------"
+        pwd
+        echo "------"
+        ls actions-repo/stacks-core/create-source-binary/build-scripts
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
