@@ -1,0 +1,64 @@
+name: "Publish Package"
+description: "Generate SemVer for the given repository and publish the package to npm"
+
+inputs:
+  major_pattern:
+    description: "Pattern that indicates a major change, supports regular expressions wrapped with '/'."
+    required: false
+    default: "(MAJOR)"
+  minor_pattern:
+    description: "Pattern that indicates a minor change, supports regular expressions wrapped with '/'."
+    required: false
+    default: "(MINOR)"
+  version_format:
+    description: "A string to determine the format of the version output."
+    required: false
+    default: "${major}.${minor}.${patch}-prerelease${increment}"
+  change_path:
+    description: "Path to check for changes. Multiple paths are possible, separated by spaces."
+    required: false
+    default: ""
+  bump_each_commit:
+    description: "If this is set to true, every commit will be treated as a new version."
+    required: false
+    default: "false"
+  bump_each_commit_patch_pattern:
+    description: "If bump_each_commit is true, increment the version only if the pattern is matched."
+    required: false
+    default: ""
+  search_commit_body:
+    description: "If true, the body of commits will be searched for patterns to determine the version type."
+    required: false
+    default: "false"
+
+runs:
+  using: "composite"
+  steps:
+    ## checkout the code
+    - name: Checkout the latest code
+      id: git_checkout
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+    ## generate Semver for the package
+    - name: Semantic Version
+      id: generate_semver
+      uses: PaulHatch/semantic-version@a8f8f59fd7f0625188492e945240f12d7ad2dca3 # v5.4.0
+      with:
+        major_pattern: ${{ inputs.major_pattern }} # If present in a commit, indicates a major change, supports regular expressions wrapped with '/'
+        minor_pattern: ${{ inputs.minor_pattern }} # If present in a commit, indicates a minor change, supports regular expressions wrapped with '/'
+        version_format: ${{ inputs.version_format }} # A string to determine the format of the version output
+        change_path: ${{ inputs.change_path }} # Path to check for changes. Multiple paths are possible, separated by spaces.
+        bump_each_commit: ${{ inputs.bump_each_commit }} # If this is set to true, every commit will be treated as a new version.
+        bump_each_commit_patch_pattern: ${{ inputs.bump_each_commit_patch_pattern }} # If bump_each_commit is true, increment the version only if the pattern is matched.
+        search_commit_body: ${{ inputs.search_commit_body }} # If true, the body of commits will be searched for patterns to determine the version type.
+
+    ## print the semver generated for testing purposes
+    - name: Print version
+      id: print_version
+      shell: bash
+      run: |
+        echo ${{ steps.generate_semver.outputs.version }}
+        echo "------------------"
+        echo ${{ steps.generate_semver.outputs.version_tag }}
+        echo "------------------"
+        echo ${{ steps.generate_semver.outputs.previous_version }}
