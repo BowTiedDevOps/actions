@@ -39,6 +39,18 @@ runs:
       id: git_checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+    - name: Print inputs
+      id: print_inputs
+      shell: bash
+      run: |
+        echo "Major: ${{ inputs.major_pattern }}"
+        echo "Minor: ${{ inputs.minor_pattern }}"
+        echo "Version format: ${{ inputs.version_format }}"
+        echo "Change path: ${{ inputs.change_path }}"
+        echo "Bump each commit: ${{ inputs.bump_each_commit }}"
+        echo "Bump each commit pattern: ${{ inputs.bump_each_commit_patch_pattern }}"
+        echo "Search commit body: ${{ inputs.search_commit_body }}"
+
     ## generate Semver for the package
     - name: Semantic Version
       id: generate_semver
