@@ -43,6 +43,14 @@ runs:
       id: git_checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+    - name: Print path
+      id: print_path
+      shell: bash
+      run: |
+        ls
+        echo "-------"
+        ls ${{ inputs.change_path }}
+
     ## generate Semver for the package
     - name: Semantic Version
       id: generate_semver
