@@ -30,6 +30,10 @@ inputs:
     description: "If true, the body of commits will be searched for patterns to determine the version type."
     required: false
     default: "false"
+  debug:
+    description: "Add diagnostic information to the action output."
+    required: false
+    default: "false"
 
 runs:
   using: "composite"
@@ -38,18 +42,6 @@ runs:
     - name: Checkout the latest code
       id: git_checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-    - name: Print inputs
-      id: print_inputs
-      shell: bash
-      run: |
-        echo "Major: ${{ inputs.major_pattern }}"
-        echo "Minor: ${{ inputs.minor_pattern }}"
-        echo "Version format: ${{ inputs.version_format }}"
-        echo "Change path: ${{ inputs.change_path }}"
-        echo "Bump each commit: ${{ inputs.bump_each_commit }}"
-        echo "Bump each commit pattern: ${{ inputs.bump_each_commit_patch_pattern }}"
-        echo "Search commit body: ${{ inputs.search_commit_body }}"
 
     ## generate Semver for the package
     - name: Semantic Version
@@ -63,6 +55,7 @@ runs:
         bump_each_commit: ${{ inputs.bump_each_commit }} # If this is set to true, every commit will be treated as a new version.
         bump_each_commit_patch_pattern: ${{ inputs.bump_each_commit_patch_pattern }} # If bump_each_commit is true, increment the version only if the pattern is matched.
         search_commit_body: ${{ inputs.search_commit_body }} # If true, the body of commits will be searched for patterns to determine the version type.
+        debug: ${{ inputs.debug }} # Add diagnostic information to the action output.
 
     ## print the semver generated for testing purposes
     - name: Print version
