@@ -13,7 +13,7 @@ runs:
       id: print_needs
       shell: bash
       run: |
-        cat ${{ inputs.jobs }}
+        echo ${{ inputs.jobs }}
         job_needs=${{ fromJson(inputs.jobs) }}
         echo $job_needs
         for job in "${jobs_needs[@]}"; do
