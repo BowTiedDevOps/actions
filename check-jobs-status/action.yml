@@ -1,5 +1,5 @@
-## Github workflow to generate a sha512 checksum for the build archive
-name: Generate Checksum
+## Github workflow to check that all jobs parsed as input from 'needs' are successful
+name: Check Jobs Result
 
 inputs:
   jobs:
@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |
         echo "${{ inputs.jobs }}"
-        for job_name in $(echo "${{ inputs.jobs }}" | jq -r 'keys[]'); do
+        for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
           result=$(echo "${json_data}" | jq -r ".${job_name}.result")
           echo "Job ${job_name} result: ${result}"
         done
