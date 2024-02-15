@@ -11,6 +11,7 @@ runs:
   steps:
     - name: Print needs content
       id: print_needs
+      shell: bash
       run: |
         echo "==="
         echo ${{ inputs.jobs }}
