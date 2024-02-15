@@ -15,6 +15,6 @@ runs:
       run: |
         echo "${{ inputs.jobs }}"
         for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
-          result=$(echo "${json_data}" | jq -r ".${job_name}.result")
+          result=$(echo '${{ inputs.jobs }}' | jq -r ".${job_name}.result")
           echo "Job ${job_name} result: ${result}"
         done
