@@ -15,7 +15,7 @@ runs:
       run: |
         job_needs=${{ fromJson(inputs.jobs) }}
         for job in "${jobs_needs[@]}"; do
-          job_status=$(echo "${{ inputs.jobs.$job.outputs.status }}" | tr -d '"')
+          job_status=$(echo "${{ job_needs.$job.outputs.status }}" | tr -d '"')
           if [ "$job_status" != "success" ]; then
             echo "Job $job failed or has not completed successfully."
             exit 1
