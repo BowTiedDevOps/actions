@@ -1,0 +1,17 @@
+## Github workflow to generate a sha512 checksum for the build archive
+name: Generate Checksum
+
+inputs:
+  jobs:
+    description: "A list of jobs from the `needs` context."
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Print needs content
+      id: print_needs
+      run: |
+        echo "==="
+        echo ${{ inputs.jobs }}
+        echo "==="
