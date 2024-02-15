@@ -14,7 +14,7 @@ runs:
       shell: bash
       run: |
         echo "${{ inputs.jobs }}"
-        for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
-          result=$(echo '${{ inputs.jobs }}' | jq -r ".${job_name}.result")
+        for job_name in $(echo "${{ inputs.jobs }}" | jq -r 'keys[]'); do
+          result=$(echo "${{ inputs.jobs }}" | jq -r ".${job_name}.result")
           echo "Job ${job_name} result: ${result}"
         done
