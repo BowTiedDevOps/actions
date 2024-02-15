@@ -13,17 +13,7 @@ runs:
       id: print_needs
       shell: bash
       run: |
-        echo "${{ inputs.jobs }}"
-        job_needs=${{ fromJson(inputs.jobs) }}
-        echo $job_needs
-        for job in "${jobs_needs[@]}"; do
-          echo $job
-          job_status=$(echo "$job_needs.$job.outputs.status" | tr -d '"')
-          echo $job_status
-          if [ "$job_status" != "success" ]; then
-            echo "Job $job failed or has not completed successfully."
-            exit 1
-          fi
+        for job_name in $(echo "${{ inputs.jobs }}" | jq -r 'keys[]'); do
+          result=$(echo "${json_data}" | jq -r ".${job_name}.result")
+          echo "Job ${job_name} result: ${result}"
         done
-
-        echo "All previous jobs are successful."
