@@ -73,7 +73,7 @@ runs:
           echo "- $job"
         done
 
-        echo ${{ inputs.action_name }}
+        echo "${{ inputs.action_name }}"
 
         if [[ "${{ inputs.summary_print }}" == "true" ]]; then
           print_to_step_summary
