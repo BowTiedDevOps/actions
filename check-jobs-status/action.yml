@@ -27,18 +27,22 @@ runs:
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
+          echo "Some jobs that are required to succeed have failed."
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "### Failed Jobs:" >> "$GITHUB_STEP_SUMMARY"
 
           for job in "${failing_jobs[@]}"; do
-            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+            echo "- **$job**" >> "$GITHUB_STEP_SUMMARY"
           done
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Successful Jobs:" >> "$GITHUB_STEP_SUMMARY"
 
           for job in "${successful_jobs[@]}"; do
-            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+            echo "- **$job**" >> "$GITHUB_STEP_SUMMARY"
           done
         }
 
