@@ -26,34 +26,31 @@ runs:
         successful_jobs=()
 
         # Function to print output to GitHub Step Summary
-        # print_to_step_summary() {
-        #   echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
+        print_to_step_summary() {
+          echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
 
-        #   echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
 
-        #   echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
+          echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
 
-        #   for job in "${failing_jobs[@]}"; do
-        #     echo "- $job" >> "$GITHUB_STEP_SUMMARY"
-        #   done
+          for job in "${failing_jobs[@]}"; do
+            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+          done
 
-        #   echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
 
-        #   echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
 
-        #   for job in "${successful_jobs[@]}"; do
-        #     echo "- $job" >> "$GITHUB_STEP_SUMMARY"
-        #   done
-        # }
+          for job in "${successful_jobs[@]}"; do
+            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+          done
+        }
 
         # Check that 'jq' command exists
         if ! command -v jq > /dev/null 2>&1; then
           echo "jq command doesn't exist!";
           exit 1;
         fi
-
-        # Print all jobs
-        echo '${{ inputs.jobs }}'
 
         # Search for failures and append them to a list
         for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
@@ -65,20 +62,20 @@ runs:
           fi
         done
 
-        # if [[ ${#failing_jobs[@]} -eq 0 ]]; then
-        #   echo "All jobs were successful!"
-        #   exit 0
-        # fi
+        if [[ ${#failing_jobs[@]} -eq 0 ]]; then
+          echo "All jobs were successful!"
+          exit 0
+        fi
 
-        # echo "Required jobs failed:"
-        # for job in "${failing_jobs[@]}"; do
-        #   echo "- $job"
-        # done
+        echo "Required jobs failed:"
+        for job in "${failing_jobs[@]}"; do
+          echo "- $job"
+        done
 
-        # echo "${{ inputs.action_name }}"
+        echo "${{ inputs.action_name }}"
 
-        # if [[ "${{ inputs.summary_print }}" == "true" ]]; then
-        #   print_to_step_summary
-        # fi
+        if [[ "${{ inputs.summary_print }}" == "true" ]]; then
+          print_to_step_summary
+        fi
 
         exit 1
