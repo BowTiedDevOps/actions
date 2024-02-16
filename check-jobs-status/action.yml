@@ -23,7 +23,7 @@ runs:
 
         # Function to print output to GitHub Step Summary
         print_to_step_summary() {
-          echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Jobs Status" >> "$GITHUB_STEP_SUMMARY"
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
