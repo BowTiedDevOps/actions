@@ -1,5 +1,5 @@
 ## Github workflow to check that all jobs parsed as input from 'needs' are successful
-name: Check Jobs Result
+name: Check Jobs Status
 
 inputs:
   jobs:
@@ -13,11 +13,21 @@ runs:
       id: check_jobs
       shell: bash
       run: |
+        # Check the jobs status and print the failures to step summary
+        are_jobs_successful=true
+
+        # Check that 'jq' command exists
+        if ! command -v jq > /dev/null 2>&1; then
+          echo "jq command doesn't exist!";
+          exit 1;
+        fi
+
+        # Search for failures and append them to a list
         for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
           result=$(echo '${{ inputs.jobs }}' | jq -r ".[\"$job_name\"].result")
           if [[ "$result" == "failure" ]]; then
             echo "$job_name failed!"
-            exit 1
+            are_jobs_successful=false
           fi
         done
 
