@@ -27,7 +27,7 @@ runs:
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "Some jobs that are required to succeed have failed."
+          echo "Some jobs that are required to succeed have failed." >> "$GITHUB_STEP_SUMMARY"
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
