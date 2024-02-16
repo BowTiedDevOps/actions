@@ -26,25 +26,25 @@ runs:
         successful_jobs=()
 
         # Function to print output to GitHub Step Summary
-        print_to_step_summary() {
-          echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
+        # print_to_step_summary() {
+        #   echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "" >> "$GITHUB_STEP_SUMMARY"
+        #   echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
+        #   echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
 
-          for job in "${failing_jobs[@]}"; do
-            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
-          done
+        #   for job in "${failing_jobs[@]}"; do
+        #     echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+        #   done
 
-          echo "" >> "$GITHUB_STEP_SUMMARY"
+        #   echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
+        #   echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
 
-          for job in "${successful_jobs[@]}"; do
-            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
-          done
-        }
+        #   for job in "${successful_jobs[@]}"; do
+        #     echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+        #   done
+        # }
 
         # Check that 'jq' command exists
         if ! command -v jq > /dev/null 2>&1; then
