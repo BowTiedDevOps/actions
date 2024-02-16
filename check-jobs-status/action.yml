@@ -5,6 +5,14 @@ inputs:
   jobs:
     description: "A list of jobs from the `needs` context."
     required: true
+  summary_print:
+    description: "Print jobs status to GitHub Step Summary"
+    required: false
+    default: "false"
+  workflow_name:
+    description: "The name of the workflow calling this action. Only used if `summary_print` is `true` (to distinguish jobs in the summary)"
+    required: false
+    default: ""
 
 runs:
   using: "composite"
@@ -13,8 +21,28 @@ runs:
       id: check_jobs
       shell: bash
       run: |
-        # Check the jobs status and print the failures to step summary
-        are_jobs_successful=true
+        # Check the jobs status and print the failures
+
+        # Function to print output to GitHub Step Summary
+        print_to_step_summary() {
+          echo "## Previous Jobs Status" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "**The following required jobs failed:**" >> "$GITHUB_STEP_SUMMARY"
+
+          for job in "${failing_jobs[@]}"; do
+            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          echo "**Successful jobs:**"
+
+          for job in "${successful_jobs[@]}"; do
+            echo "- $job" >> "$GITHUB_STEP_SUMMARY"
+          done
+        }
 
         # Check that 'jq' command exists
         if ! command -v jq > /dev/null 2>&1; then
@@ -29,10 +57,26 @@ runs:
         for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
           result=$(echo '${{ inputs.jobs }}' | jq -r ".[\"$job_name\"].result")
           if [[ "$result" == "failure" ]]; then
-            echo "$job_name failed!"
-            are_jobs_successful=false
+            failing_jobs+=("$job_name")
+          else
+            successful_jobs+=("$job_name")
           fi
         done
 
-        echo "All jobs were successful!"
-        exit 0
+        if [[ -z "$failing_jobs" ]]; then
+          echo "All jobs were successful!"
+          exit 0
+        fi
+
+        echo "Required jobs failed:"
+        for job in "${failing_jobs[@]}"; do
+          echo "- $job"
+        done
+
+        echo ${{ inputs.workflow_name }}
+
+        if [[ "${{ inputs.summary_print }}" == "true" ]]; then
+          print_to_step_summary
+        fi
+
+        exit 1
