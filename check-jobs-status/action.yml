@@ -22,6 +22,8 @@ runs:
       shell: bash
       run: |
         # Check the jobs status and print the failures
+        failing_jobs=()
+        successful_jobs=()
 
         # Function to print output to GitHub Step Summary
         print_to_step_summary() {
@@ -37,7 +39,7 @@ runs:
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
 
-          echo "**Successful jobs:**"
+          echo "**Successful jobs:**" >> "$GITHUB_STEP_SUMMARY"
 
           for job in "${successful_jobs[@]}"; do
             echo "- $job" >> "$GITHUB_STEP_SUMMARY"
