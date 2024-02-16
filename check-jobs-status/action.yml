@@ -9,10 +9,6 @@ inputs:
     description: "Print jobs status to GitHub Step Summary"
     required: false
     default: "false"
-  action_name:
-    description: "The name of the caller action. Only used if `summary_print` is `true` (to distinguish jobs in the summary)"
-    required: false
-    default: ""
 
 runs:
   using: "composite"
@@ -71,8 +67,6 @@ runs:
         for job in "${failing_jobs[@]}"; do
           echo "- $job"
         done
-
-        echo "${{ inputs.action_name }}"
 
         if [[ "${{ inputs.summary_print }}" == "true" ]]; then
           print_to_step_summary
