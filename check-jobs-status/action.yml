@@ -22,6 +22,9 @@ runs:
           exit 1;
         fi
 
+        # Print all jobs
+        echo '${{ inputs.jobs }}'
+
         # Search for failures and append them to a list
         for job_name in $(echo '${{ inputs.jobs }}' | jq -r 'keys[]'); do
           result=$(echo '${{ inputs.jobs }}' | jq -r ".[\"$job_name\"].result")
