@@ -41,9 +41,9 @@ runs:
       run: |
         cargo install --git https://github.com/ASuciuX/cargo-mutants --branch feat/variable-test-timeout cargo-mutants # v24.2.0 - with test timeout multiplier implementation
 
-    - uses: taiki-e/install-action@ac89944b5b150d78567ab6c02badfbe48b0b55aa # v2.20.16
-      name: Install cargo-nextest
+    - name: Install cargo-nextest
       id: install_cargo_nextest
+      uses: taiki-e/install-action@5f9cf6b4fec4df2ca3194dba6eec1749e2f29d18 # v2.27.11
       with:
         tool: nextest # Latest version
 
@@ -254,7 +254,7 @@ runs:
 
     - name: Upload artifact
       id: upload_artifact
-      uses: actions/upload-artifact@1eb3cb2b3e0f29609092a73eb033bb759a334595 # v4.1.0
+      uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
       with:
         name: mutants-shard-${{ inputs.package }}-${{ inputs.shard }}
         path: mutants-shard-${{ inputs.package }}-${{ inputs.shard }}
