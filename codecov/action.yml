@@ -55,7 +55,7 @@ runs:
     ##   - use wretry action, to retry on a failed upload
     - name: Upload Code Coverage
       id: code_coverage
-      uses: Wandalen/wretry.action@a163f62ae554a8f3cbe27b23db15b60c0ae2e93c # v1.3.0
+      uses: Wandalen/wretry.action@62451a214c01d1b0136b4f87289d840b30d67b98 # v1.4.4
       with:
         action: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with: |
