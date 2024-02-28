@@ -75,7 +75,7 @@ runs:
       id: install_bitcoin
       shell: bash
       run: |
-        curl -LSf -# https://github.com/stacks-network/bitcoin/releases/download/v${{ inputs.btc-version }}/bitcoin-${{ inputs.btc-version }}-x86_64-linux-gnu.tar.gz | tar zxf - -C ~
+        curl -LSf -# https://github.com/BowTiedDevOps/bitcoin/releases/download/v${{ inputs.btc-version }}/bitcoin-${{ inputs.btc-version }}-x86_64-linux-gnu.tar.gz | tar zxf - -C ~
         mv ~/bitcoin-${{ inputs.btc-version }} ~/bitcoin
 
     ## Use wretry action to retry on a failed upload

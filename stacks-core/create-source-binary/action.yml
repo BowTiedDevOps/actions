@@ -16,7 +16,7 @@ runs:
   steps:
     ## Setup Docker for the builds
     - name: Docker setup
-      uses: stacks-network/actions/docker@main
+      uses: BowTiedDevOps/actions/docker@main
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})
