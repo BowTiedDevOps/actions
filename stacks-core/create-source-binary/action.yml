@@ -16,7 +16,7 @@ runs:
   steps:
     ## Setup Docker for the builds
     - name: Docker setup
-      uses: BowTiedDevOps/actions/docker@main
+      uses: BowTiedDevOps/actions/docker@feat/retry-action
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }})

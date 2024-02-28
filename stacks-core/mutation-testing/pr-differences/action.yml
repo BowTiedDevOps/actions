@@ -20,7 +20,7 @@ runs:
     # Cleanup Runner
     - name: Cleanup Runner
       id: runner_cleanup
-      uses: BowTiedDevOps/actions/cleanup/disk@main
+      uses: BowTiedDevOps/actions/cleanup/disk@feat/retry-action
 
     # Checkout the stacks-core code
     - name: Checkout stacks-core repo
