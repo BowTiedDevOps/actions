@@ -24,43 +24,45 @@ runs:
       run: |
         # Split alias command's options
         alias=$(grep -e "${{ inputs.alias }}[[:space:]]*=" .cargo/config | tr -d '"' | awk '/^${{ inputs.alias }}[[:space:]]*=/ {sub(/^${{ inputs.alias }}[[:space:]]*=[[:space:]]*/, ""); print; exit}')
-
+        echo "1"
         before_empty_dashes=""
         after_empty_dashes=""
         reached_empty_dashes=false
-
+        echo "2"
         IFS=' '
-
+        echo "3"
         read -ra args <<< "$alias"
-
+        echo "4"
         if [[ "${args[0]}" != "fmt" && "${{ inputs.alias }}" != "fmt" ]]; then
           echo "The provided alias is invalid!";
         fi
-
+        echo "5"
         for arg in "${args[@]}"; do
           if [[ "$arg" == "--" ]]; then
             reached_empty_dashes=true;
             continue;
           fi
-
+          echo "6"
           if $reached_empty_dashes; then
             after_empty_dashes="$after_empty_dashes $arg";
           else
             before_empty_dashes="$before_empty_dashes $arg";
           fi
         done
-
+        echo "7"
         # Run cargo and store the original output
         CARGO_STATUS=0
         CARGO_OUTPUT=$(cargo ${before_empty_dashes:-fmt} --all --manifest-path=${{ inputs.manifest-path }} -- $after_empty_dashes --color=always --check 2>/dev/null) || CARGO_STATUS=$?
-
+        echo "8"
         if [ ${CARGO_STATUS} -eq 0 ]; then
+            echo "9"
             cat <<MARKDOWN_INTRO >> $GITHUB_STEP_SUMMARY
         # Rustfmt Results
 
         The code is formatted perfectly!
         MARKDOWN_INTRO
         else
+            echo "10"
             cat <<MARKDOWN_INTRO >> $GITHUB_STEP_SUMMARY
         # Rustfmt Results
 
@@ -81,8 +83,9 @@ runs:
                 sed -E 's#Diff in ([^\r]*?) at line ([[:digit:]]+):\r((:?[ +-][^\r]*\r)+)#<details>\n<summary>\1:\2</summary>\n\n```diff\n\3```\n\n</details>\n\n#g' |
                 tr "\r" "\n" >> $GITHUB_STEP_SUMMARY
         fi
-
+        echo "11"
         # Print the original cargo message
         echo "${CARGO_OUTPUT}"
+        echo "12"
         # Exit with the same status as cargo
         exit "${CARGO_STATUS}"
