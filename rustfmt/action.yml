@@ -24,7 +24,7 @@ runs:
       run: |
         # Split alias command's options
         echo "0"
-        alias2=$(grep -e "${{ inputs.alias }}[[:space:]]*=" .cargo/config | tr -d '"')
+        alias2="$(grep -e "${{ inputs.alias }}[[:space:]]*=" .cargo/config | tr -d '"')"
         echo "0.5"
         alias=$(grep -e "${{ inputs.alias }}[[:space:]]*=" .cargo/config | tr -d '"' | awk '/^${{ inputs.alias }}[[:space:]]*=/ {sub(/^${{ inputs.alias }}[[:space:]]*=[[:space:]]*/, ""); print; exit}')
         echo "1"
