@@ -25,6 +25,7 @@ runs:
     ## Set environment variables to be used in builds
     - name: Set local env vars
       id: set_env_vars
+      shell: bash
       run: |
         case ${{ inputs.cpu }} in
             x86-64)
