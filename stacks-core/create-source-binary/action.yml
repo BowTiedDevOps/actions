@@ -22,6 +22,14 @@ runs:
     - name: Docker setup
       uses: stacks-network/actions/docker@main
 
+    - name: Checkout Actions
+      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        repository: BowTiedDevOps/actions
+        ref: feat/update-release-build-dockerfiles
+        sparse-checkout: stacks-core/create-source-binary/build-scripts
+        path: dockerfiles
+
     ## Set environment variables to be used in builds
     - name: Set local env vars
       id: set_env_vars
@@ -56,16 +64,16 @@ runs:
         echo "TARGET_CPU: ${TARGET_CPU}"
 
         # Print paths
-        ls -al build-scripts
         pwd
         ls -al
+        ls -al actions
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }}_${{ inputs.cpu }})
       id: build_binaries
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # 5.0.0
       with:
-        file: build-scripts/${{ env.DOCKERFILE }}
+        file: dockerfiles/${{ env.DOCKERFILE }}
         outputs: type=local,dest=./release/${{ inputs.arch }}
         build-args: |
           STACKS_NODE_VERSION=${{ inputs.tag || env.GITHUB_SHA_SHORT }}
