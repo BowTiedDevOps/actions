@@ -68,14 +68,14 @@ runs:
         # Print paths
         pwd
         ls -al
-        ls -al dockerfiles
+        ls -al dockerfiles/stacks-core/create-source-binary/build-scripts
 
     ## Build the binaries using defined dockerfiles
     - name: Build Binary (${{ inputs.arch }}_${{ inputs.cpu }})
       id: build_binaries
       uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # 5.0.0
       with:
-        file: dockerfiles/build-scripts/${{ env.DOCKERFILE }}
+        file: dockerfiles/stacks-core/create-source-binary/build-scripts/${{ env.DOCKERFILE }}
         outputs: type=local,dest=./release/${{ inputs.arch }}
         build-args: |
           STACKS_NODE_VERSION=${{ inputs.tag || env.GITHUB_SHA_SHORT }}
