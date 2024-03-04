@@ -27,7 +27,9 @@ runs:
       with:
         repository: BowTiedDevOps/actions
         ref: feat/update-release-build-dockerfiles
-        sparse-checkout: 'stacks-core/create-source-binary/build-scripts'
+        sparse-checkout: |
+          stacks-core/create-source-binary/build-scripts
+        sparse-checkout-cone-mode: false
         path: dockerfiles
 
     ## Set environment variables to be used in builds
