@@ -19,21 +19,19 @@ RUN apt-get update && apt-get install -y clang zstd
 RUN wget -nc -O /tmp/osxcross.tar.zst ${OSXCROSS} \
     && mkdir -p /opt/osxcross && tar -xaf /tmp/osxcross.tar.zst -C /opt/osxcross
 
-# Determine the build argument based on the TAG
-RUN case "${TAG}" in \
+# Run all the build steps in ramdisk in an attempt to improve build time
+RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
+    && cd ${BUILD_DIR} \
+    && rustup target add ${TARGET} \
+    && . /opt/osxcross/env-macos-x86_64 \
+    && case "${TAG}" in \
         signer-*) \
             BUILD_ARG="--bin stacks-signer" \
             ;; \
         *) \
             BUILD_ARG="" \
             ;; \
-    esac
-
-# Run all the build steps in ramdisk in an attempt to improve build time
-RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
-    && cd ${BUILD_DIR} \
-    && rustup target add ${TARGET} \
-    && . /opt/osxcross/env-macos-x86_64 \
+    esac \
     && cargo build --features monitoring_prom,slog_json --release --workspace --target ${TARGET} ${BUILD_ARG} \
     && mkdir -p /out \
     && find ${BUILD_DIR}/target/${TARGET}/release/ -maxdepth 1 -executable -type f | xargs cp -at /out/

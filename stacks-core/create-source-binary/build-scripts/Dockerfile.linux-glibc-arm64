@@ -12,20 +12,18 @@ COPY . .
 
 RUN apt-get update && apt-get install -y git gcc-aarch64-linux-gnu libclang-dev llvm
 
-# Determine the build argument based on the TAG
-RUN case "${TAG}" in \
+# Run all the build steps in ramdisk in an attempt to improve build time
+RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
+    && cd ${BUILD_DIR} \
+    && rustup target add ${TARGET} \
+    && case "${TAG}" in \
         signer-*) \
             BUILD_ARG="--bin stacks-signer" \
             ;; \
         *) \
             BUILD_ARG="" \
             ;; \
-    esac
-
-# Run all the build steps in ramdisk in an attempt to improve build time
-RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
-    && cd ${BUILD_DIR} \
-    && rustup target add ${TARGET} \
+    esac \
     && CC=aarch64-linux-gnu-gcc \
     CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc \
     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc \

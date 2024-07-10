@@ -12,20 +12,18 @@ COPY . .
 
 RUN apt-get update && apt-get install -y git gcc-arm-linux-gnueabihf libclang-dev llvm
 
-# Determine the build argument based on the TAG
-RUN case "${TAG}" in \
+# Run all the build steps in ramdisk in an attempt to improve build time
+RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
+    && cd ${BUILD_DIR} \
+    && rustup target add ${TARGET} \
+    && case "${TAG}" in \
         signer-*) \
             BUILD_ARG="--bin stacks-signer" \
             ;; \
         *) \
             BUILD_ARG="" \
             ;; \
-    esac
-
-# Run all the build steps in ramdisk in an attempt to improve build time
-RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
-    && cd ${BUILD_DIR} \
-    && rustup target add ${TARGET} \
+    esac \
     && CC=arm-linux-gnueabihf-gcc \
     CC_armv7_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc \
     CARGO_TARGET_ARMV7_UNKNOWN_LINUX_GNUEABIHF_LINKER=arm-linux-gnueabihf-gcc \

@@ -10,20 +10,18 @@ WORKDIR /src
 
 COPY . .
 
-# Determine the build argument based on the TAG
-RUN case "${TAG}" in \
+# Run all the build steps in ramdisk in an attempt to improve build time
+RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
+    && cd ${BUILD_DIR} \
+    && rustup target add ${TARGET} \
+    && case "${TAG}" in \
         signer-*) \
             BUILD_ARG="--bin stacks-signer" \
             ;; \
         *) \
             BUILD_ARG="" \
             ;; \
-    esac
-
-# Run all the build steps in ramdisk in an attempt to improve build time
-RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
-    && cd ${BUILD_DIR} \
-    && rustup target add ${TARGET} \
+    esac \
     && cargo build --features monitoring_prom,slog_json --release --workspace --target ${TARGET} ${BUILD_ARG} \
     && mkdir -p /out \
     && find ${BUILD_DIR}/target/${TARGET}/release/ -maxdepth 1 -executable -type f | xargs cp -at /out/
