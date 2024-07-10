@@ -7,11 +7,22 @@ ARG BUILD_DIR=/build
 ARG TARGET=x86_64-pc-windows-gnu
 ARG TARGET_CPU
 ENV RUSTFLAGS="${TARGET_CPU:+${RUSTFLAGS} -Ctarget-cpu=${TARGET_CPU}}"
+ARG TAG="No Tag Info"
 WORKDIR /src
 
 COPY . .
 
 RUN apt-get update && apt-get install -y git gcc-mingw-w64-x86-64 libclang-dev
+
+# Determine the build argument based on the TAG
+RUN case "${TAG}" in \
+        signer-*) \
+            BUILD_ARG="--bin stacks-signer" \
+            ;; \
+        *) \
+            BUILD_ARG="" \
+            ;; \
+    esac
 
 # Run all the build steps in ramdisk in an attempt to improve build time
 RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
@@ -19,7 +30,7 @@ RUN --mount=type=tmpfs,target=${BUILD_DIR} cp -R /src/. ${BUILD_DIR}/ \
     && rustup target add ${TARGET} \
     && CC_x86_64_pc_windows_gnu=x86_64-w64-mingw32-gcc \
     CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=x86_64-w64-mingw32-gcc \
-    cargo build --features monitoring_prom,slog_json --release --workspace --target ${TARGET} \
+    cargo build --features monitoring_prom,slog_json --release --workspace --target ${TARGET} ${BUILD_ARG} \
     && mkdir -p /out \
     && find ${BUILD_DIR}/target/${TARGET}/release/ -maxdepth 1 -executable -type f | xargs cp -at /out/
 
