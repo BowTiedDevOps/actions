@@ -11,10 +11,9 @@ Checks whether the tag parsed as argument matches a stacks-node release, a stack
 
 ### Outputs
 | Output | Description |
-| ---------------  | ----------------------------------------------------------------------------------- |
-|      `tag`       | The release tag, if there is one (empty otherwise).                                 |
-|   `docker_tag`   | The release tag for docker, if there is one (empty otherwise).                      |
-| `signer_release` | True if the release is a signer one, false if not, empty if it's no release at all. |
+| ------------ | -------------------------------------------------------------- |
+|     `tag`    | The release tag, if there is one (empty otherwise).            |
+| `docker_tag` | The release tag for docker, if there is one (empty otherwise). |
 
 ## Usage
 

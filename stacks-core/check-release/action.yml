@@ -14,9 +14,6 @@ outputs:
   docker_tag:
     description: "The release tag for docker, if there is one (empty otherwise)."
     value: ${{ steps.check_release.outputs.docker_tag }}
-  signer_release:
-    description: "True if the release is a signer one, false if not, empty if it's no release at all."
-    value: ${{ steps.check_release.outputs.signer_release }}
 
 runs:
   using: "composite"
@@ -30,20 +27,16 @@ runs:
         if [[ "$branch_name" =~ ^release\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(-rc[0-9]+)?$ ]]; then
           tag=$(echo "$branch_name" | sed -E 's/^release\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
           docker_tag=${tag}
-          signer_release='false'
         elif [[ "$branch_name" =~ ^release\/(signer-([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+))(-rc[0-9]+)?$ ]]; then
           tag=$(echo "$branch_name" | sed -E 's/^release\/(signer-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
           docker_tag=$(echo "$branch_name" | sed -E 's/^release\/signer-([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
-          signer_release='true'
         else
           # TODO: In the future, we'll want to exit here
           tag=''
           docker_tag=''
-          signer_release=''
         fi
 
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
         echo "docker_tag=$docker_tag" >> "$GITHUB_OUTPUT"
-        echo "signer_release=$signer_release" >> "$GITHUB_OUTPUT"
 
         exit 0
