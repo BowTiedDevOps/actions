@@ -24,17 +24,33 @@ runs:
       run: |
         branch_name=${{ inputs.tag }}
 
-        if [[ "$branch_name" =~ ^release\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(-rc[0-9]+)?$ ]]; then
-          tag=$(echo "$branch_name" | sed -E 's/^release\/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
-          docker_tag=${tag}
-        elif [[ "$branch_name" =~ ^release\/(signer-([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+))(-rc[0-9]+)?$ ]]; then
-          tag=$(echo "$branch_name" | sed -E 's/^release\/(signer-[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
-          docker_tag=$(echo "$branch_name" | sed -E 's/^release\/signer-([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?)$/\1/')
-        else
-          # TODO: In the future, we'll want to exit here
-          tag=''
-          docker_tag=''
+        stacks_core_version_regex="([0-9].[0-9].[0-9].[0-9].[0-9]+(-rc[0-9]+)?)"    # matches x.x.x.x.x || x.x.x.x.x-rcx
+        signer_version_regex="([0-9].[0-9].[0-9].[0-9].[0-9].[0-9]+(-rc[0-9]+)?)"   # matches x.x.x.x.x.x || x.x.x.x.x.x-rcx
+
+        stacks_core_regex_base="release/"
+        signer_regex_base="release/signer-"
+
+        stacks_core_regex="${stacks_core_regex_base}${stacks_core_version_regex}"
+        signer_regex="${signer_regex_base}${signer_version_regex}"
+
+        tag=""
+        docker_tag=""
+        if [[ "$branch_name" =~ ^${stacks_core_regex}$ || "$branch_name" =~ ^${signer_regex}$ ]]; then
+          case ${branch_name} in
+            release/signer-[0-9]*)
+              tag=$(echo "$branch_name" | sed "s|^${signer_regex_base}||g")
+              docker_tag=${tag}
+              ;;
+            *)
+              tag=$(echo "$branch_name" | sed "s|^${stacks_core_regex_base}||g")
+              docker_tag=${tag}
+              ;;
+          esac
         fi
+
+        echo "branch name: $branch_name"
+        echo "tag: $tag"
+        echo "docker_tag: $docker_tag"
 
         echo "tag=$tag" >> "$GITHUB_OUTPUT"
         echo "docker_tag=$docker_tag" >> "$GITHUB_OUTPUT"
