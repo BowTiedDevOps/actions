@@ -41,14 +41,13 @@ runs:
         is_release=false
 
         if [[ "$branch_name" =~ ^${stacks_core_regex}$ || "$branch_name" =~ ^${signer_regex}$ ]]; then
+          tag=$(echo "$branch_name" | sed "s|^${stacks_core_regex_base}||g")
           case ${branch_name} in
             release/signer-[0-9]*)
-              tag=$(echo "$branch_name" | sed "s|^${signer_regex_base}||g")
-              docker_tag=${tag}
+              docker_tag=$(echo "$branch_name" | sed "s|^${signer_regex_base}||g")
               is_release=true
               ;;
             *)
-              tag=$(echo "$branch_name" | sed "s|^${stacks_core_regex_base}||g")
               docker_tag=${tag}
               is_release=true
               ;;
